@@ -8,11 +8,22 @@ class TaskManager:
         self.storage_path = Path(storage_path)
         self.tasks : list[Task] = []
 
-    def add_task(self):
-        pass
+    def add_task(self, title: str, description: str = "", priority: TaskPriority = TaskPriority.MEDIUM) -> Task:
+        
+        next_id = self.tasks[-1].id + 1 if self.tasks else 1
+        
+        new_task = Task(id=next_id , title=title , description=description , priority=priority)
+        self.tasks.append(new_task)
+        self.save_tasks()
+        return new_task
 
-    def remove_task(self):
-        pass
+    def remove_task(self, task_id: int) -> bool:
+        for task in self.tasks:
+            if task.id == task_id:
+                self.tasks.remove(task)
+                self.save_tasks()
+                return True
+        return False
 
     def _task_to_dick(self, task: Task) -> dict[str, Any]:
         return {
